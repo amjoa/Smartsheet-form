@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Smartsheet Forecast Form</title>
+</head>
+<body>
+  <h2>Submit Revenue Forecast</h2>
+  <form id="forecastForm">
+    <label>
+      Name:
+      <input type="text" id="name" required />
+    </label><br><br>
+
+    <label>
+      Forecast Amount:
+      <input type="number" id="amount" required />
+    </label><br><br>
+
+    <label>
+      Date:
+      <input type="date" id="date" required />
+    </label><br><br>
+
+    <button type="submit">Submit Forecast</button>
+  </form>
+
+  <p id="status"></p>
+
+  <script>
+    const sheetId = 4735519774691204;
+    const columnIds = {
+      name: Project ID,     // Replace with your column ID for "Name"
+      amount: Blended Rate,   // Replace with your column ID for "Forecast Amount"
+      date: Start Date      // Replace with your column ID for "Date"
+    };
+    const token = hgqxsdwyWJj7ATNnNf9Fil5ykqnBhQt6EpdGn;
+
+    document.getElementById("forecastForm").addEventListener("submit", function (e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const amount = parseFloat(document.getElementById("amount").value);
+      const date = document.getElementById("date").value;
+
+      const rowData = {
+        toBottom: true,
+        cells: [
+          { columnId: columnIds.name, value: name },
+          { columnId: columnIds.amount, value: amount },
+          { columnId: columnIds.date, value: date }
+        ]
+      };
+
+      fetch(`https://api.smartsheet.com/2.0/sheets/${sheetId}/rows`, {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify([rowData])
+      })
+      .then(res => res.ok ? "Success" : Promise.reject("Failed"))
+      .then(() => {
+        document.getElementById("status").innerText = "✅ Forecast submitted!";
+        document.getElementById("forecastForm").reset();
+      })
+      .catch(() => {
+        document.getElementById("status").innerText = "❌ Error submitting forecast.";
+      });
+    });
+  </script>
+</body>
+</html>
+
