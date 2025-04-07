@@ -52,23 +52,27 @@
         ]
       };
 
-      fetch(`https://api.smartsheet.com/2.0/sheets/${sheetId}/rows`, {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${token}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify([rowData])
-      })
-      .then(res => res.ok ? "Success" : Promise.reject("Failed"))
-      .then(() => {
-        document.getElementById("status").innerText = "✅ Forecast submitted!";
-        document.getElementById("forecastForm").reset();
-      })
-      .catch(() => {
-        document.getElementById("status").innerText = "❌ Error submitting forecast.";
-      });
-    });
+     fetch(https://script.google.com/u/0/home/projects/1SuYo_8AkOMOxzwUCiishQG6Bo9LMrCx1lVbYtZNnjZyTvQSerHCs0DUV/edit, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    name: name,
+    amount: amount,
+    date: date
+  })
+})
+.then(res => res.json())
+.then(data => {
+  if (data.status === "success") {
+    document.getElementById("status").innerText = "✅ Forecast submitted!";
+    document.getElementById("forecastForm").reset();
+  } else {
+    document.getElementById("status").innerText = "❌ Error: " + data.message;
+  }
+});
+
   </script>
 </body>
 </html>
