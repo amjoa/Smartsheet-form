@@ -7,27 +7,16 @@
 <body>
   <h2>Submit Revenue Forecast</h2>
   <form id="forecastForm">
-    <label>
-      Name:
-      <input type="text" id="name" required />
-    </label><br><br>
-
-    <label>
-      Forecast Amount:
-      <input type="number" id="amount" required />
-    </label><br><br>
-
-    <label>
-      Date:
-      <input type="date" id="date" required />
-    </label><br><br>
-
+    <label>Name: <input type="text" id="name" required /></label><br><br>
+    <label>Forecast Amount: <input type="number" id="amount" required /></label><br><br>
+    <label>Date: <input type="date" id="date" required /></label><br><br>
     <button type="submit">Submit Forecast</button>
   </form>
-
   <p id="status"></p>
 
   <script>
+    const scriptUrl = 'https://script.google.com/macros/s/AKfycbzS6etrD1jOs3C911dqDnv1oaLLDAYQDjaiJB-ARVGQruJnSdUvttCDGTpdJkaxyEMU/exec'; // Replace with yours
+
     document.getElementById("forecastForm").addEventListener("submit", function (e) {
       e.preventDefault();
 
@@ -35,20 +24,15 @@
       const amount = parseFloat(document.getElementById("amount").value);
       const date = document.getElementById("date").value;
 
-      fetch("https://script.google.com/macros/s/AKfycbzhdJpPvtbio8D_dNNHmiAmlJ7LA6MCqNqGkcUi_U6oiKcWQ6oHG0IaSEhAQG4aMmEp/exec", {
+      fetch(scriptUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          name: name,
-          amount: amount,
-          date: date
-        })
+        body: JSON.stringify({ name, amount, date })
       })
       .then(res => res.json())
       .then(data => {
-        console.log("Response:", data); // 👈 helpful for debugging
         if (data.status === "success") {
           document.getElementById("status").innerText = "✅ Forecast submitted!";
           document.getElementById("forecastForm").reset();
@@ -57,10 +41,10 @@
         }
       })
       .catch(err => {
-        document.getElementById("status").innerText = "❌ Submission failed: " + err;
-        console.error("Fetch error:", err); // 👈 see errors in console
+        document.getElementById("status").innerText = "❌ Submission failed: " + err.message;
       });
     });
   </script>
 </body>
 </html>
+
